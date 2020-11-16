@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang='el-GR'>
+<meta charset="utf-8" />
+
+
+<head>
+    <!-- My CSS styls -->
+    <link rel="stylesheet" href="CSS/styles.css">
+
+    <!-- BING map -->
+    <script type='text/javascript' src='http://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmB10sLEYKiqVN8mibtfPrXI9RX63fJUSD6KfPn2lKdc1JPkttrr5dmqoCi2VkH6' async defer></script>
+
+
+	<!-- Latest compiled and minified CSS BootStrap-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript BootStrap-->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+	<!-- JQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+
+
+<body>
+    
+    <!--include header-->
+	<div id="nav-ph"> </div>   
+     
+     <!--Error pop up that appears after error in device-->
+     <div id="userMsg" class="alert">	
+		  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		  <strong>Warning!</strong> Error have occured in the deive.
+     </div>
+	
+	 <div id="myMap"></div> <br>
+
+     <!-- Container to display all the info that we get from DB-->
+     <div class="container">
+		 <div class="tab">
+		  	<button class="tablinks" onclick="tabStatus(event, 'Details')" id="defaultOpen">Details</button>
+		  	<button class="tablinks" onclick="tabStatus(event, 'Errors')">Errors</button>
+		  	<button class="tablinks" onclick="tabStatus(event, 'User Messages')">User Messages</button>
+		 </div>
+
+		  <!-- Tab content: Details displays details of the device -->
+		  <div id="Details" class="tabcontent">
+		  	<h3 style="float:left;">Details</h3> 	<button style="float:left;" class="button right">Update</button>
+		  	<div id="Details1"></div>
+		  	<table class="table">
+		        <tr>
+		            <td>ID</td>
+		            <td id="Id"></td>
+		        </tr>
+		        <tr>
+		            <td>Device id</td>
+		            <td id="DevId"></td>
+		        </tr>
+		        <tr>
+		            <td>Ultrasonic Sensor</td>
+		            <td id="UltraSen"></td>
+		        </tr>
+		        <tr>
+		            <td>Water Sensor</td>
+		            <td id="WatSen"></td>
+		        </tr>
+
+		        <tr>
+		            <td>Last Updated Date:</td>
+		            <td id="date"></td>
+		        </tr>
+		     </table>
+		  </div>
+          
+          <!-- Tab content: Error displays all errors of the device -->
+		  <div id="Errors" class="tabcontent">
+		  	<h3>Errors</h3>
+		  	<table class="table_error" id="table_error" style="width:100%">
+		  	 <thead>
+		        <tr class="table_tr">
+		            <th class="table_th">Date</th>
+					<th class="table_th">Device id</th>
+		            <th class="table_th">Description</th>		            
+		        </tr>
+		       </thead>
+
+		     </table>
+		  </div>
+
+		 <!-- Tab content: User Messages will display results from Machine Learning algorithm -->
+		  <div id="User Messages" class="tabcontent">
+		  	<h3>User Messages</h3>
+		  	<p>Junk</p>
+		  </div>
+
+	</div>
+
+	<script src="JS/scripts.js"></script>
+	<script>
+	//Add headear in page
+	$(function(){
+	  $("#nav-ph").load("include/navigation.html");
+	});
+	</script>
+
+	<script>
+		//Display info of freatio to tab/table 'Details'
+        $(document).ready( function() {  
+      		ping0();
+    	});
+        
+
+        var lastNotificationIdentifier = '';
+
+        //GET freation info from DB
+	    function pingScores() {               
+	        $.ajax({ 
+	            type: "GET",
+	            url: "http://localhost/ptixiaki%20v1/APIs/info.php?task=Get%20Code",
+	            cache: false,
+	            async: true,            
+	            success: function(data){
+					res = data.info[0];
+                    localIdentifier = res.id;
+                    console.log(localIdentifier);
+                    
+                    // When a new row is added, then table is going to be updated with newest data
+                    if (localIdentifier !== lastNotificationIdentifier) {
+                        document.getElementById("Id").innerHTML = res.id;
+	                    document.getElementById("DevId").innerHTML= res.device_id;
+	                    document.getElementById("UltraSen").innerHTML= res.ultrasonicSensor;
+	                    document.getElementById("WatSen").innerHTML= res.waterSensor;
+	                    document.getElementById("date").innerHTML= res.date;
+
+		                
+		                lastNotificationIdentifier = localIdentifier;
+		            }
+	                setTimeout("ping0()", 1000);
+	            }
+	        });
+	    };	
+	</script>
+
+	<script>
+		//Display error info. Needs eork. Is not working properly.
+        $(document).ready( function() {  
+      		ping2();
+    	});  
+       
+        //GET error info from table
+	    function pingScores2() {               
+	        $.ajax({ 
+	            type: "GET",
+	            url: "http://localhost/ptixiaki%20v1/APIs/info_error.php",
+	            cache: false,
+	            async: true,            
+	            success: function(data){
+					res2 = data.info;
+					console.log(res2);
+					var event_data = '';
+                     $.each(res2, function(index, value){
+			                /*console.log(value);*/
+			                event_data += '<tr>';
+			                event_data += '<th>'+value.date+'</th>';
+			                event_data += '<th>'+value.device_id+'</th>';
+			                event_data += '<th>'+value.description+'</th>';
+			                event_data += '</tr>';
+			            });
+			            $("#table_error").append(event_data);		
+
+			             setTimeout("ping2()", 1000);	 	           
+			        }
+             });
+		}
+           
+	</script>
+
+
+    <script>
+    	//Get Freatio status. If its floated => update map icon to red (from green) and display error message
+    	var lastNotificationIdentifier1 = '';
+        var isFloated;
+
+		
+        $(document).ready( function() {
+      		ping1();
+    	});       
+        
+        // Get Freatio status from DB
+	    function pingScores1() {            
+	        $.ajax({ 
+	            type: "GET",
+	            url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php?task=Get%20ifFloated",
+	            cache: false,
+	            async: true,            
+	            success: function(data){
+					res1 = data.info[0];
+                    localIdentifier1 = res1.id;
+                    isFloated = res1.isFloated;
+                    console.log(localIdentifier1);
+                    console.log(lastNotificationIdentifier1);
+
+                    // When a new row is added, then table is going to be updated with newest data
+                    if (localIdentifier1 !== lastNotificationIdentifier1) {
+                    	//According to isFloated, display error message 
+                         if (isFloated == 1) {
+			                document.getElementById("userMsg").style.display= "block"; 
+			              } else if (isFloated == 0)
+			              {
+			                document.getElementById("userMsg").style.display= "none"; 
+			              }
+                        
+                        //If its floated, post to Error table
+			            if (isFloated == 1){
+			            	$.ajax({
+				                type: "POST",
+				                url: "http://localhost/ptixiaki%20v1/APIs/postErrorFloater.php",
+				                success: function (data) {
+				                	console.log("Data: " + data + "is posted");
+				                }
+				            });
+			            }
+
+			             lastNotificationIdentifier1 = localIdentifier1;			             
+	                }
+	                setTimeout("ping1()", 1000);
+	            }
+
+	        });
+	    }
+
+	 
+
+	</script>
+		
+
+</body>
+
+</html>
