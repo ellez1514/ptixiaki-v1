@@ -1,29 +1,58 @@
-Agios-Panteliomonas,72,10,November,Fall,River-Overflow,0,70,1
-Athens,80,4,November,Fall,No,30,8,1
-Neo Faliro,75,8,November,Fall,No,30,6,1
-Mosxato,60,7,November,Fall,No,30,0,1
-Peristeri,114,8,November,Fall,River-Overflow,0,40,1
-Peristeri,80,9,November,Fall,River-Overflow,0,39,1
-Tzitzifies,66,4,November,Fall,River-Overflow,0,0,1
-Tauros,78,8,november,Fall,River-Overflow,0,0,1
+Agios-Panteliomonas,72,10,November,Fall,River-Overflow,0,1
+Athens,80,4,November,Fall,No,30,1
+Neo Faliro,75,8,November,Fall,No,30,1
+Mosxato,60,7,November,Fall,No,30,1
+Peristeri,114,8,November,Fall,River-Overflow,0,1
+Peristeri,80,9,November,Fall,River-Overflow,0,1
+Tzitzifies,66,4,November,Fall,River-Overflow,0,1
+Tauros,78,8,november,Fall,River-Overflow,0,1
+Mosxato,70,5,november,Fall,River-Overflow,0,1
+Bari,64,5,November,Fall,River-Overflow,0,1
+Boula,64,5,November,Fall,River-Overflow,0,1
+Glyfada,64,5,November,Fall,River-Overflow,0,1
+Nea-Ionia,70,1.5,October,fall,River-Overflow,0,1
+Perissos,70,1.5,October,Fall,River-Overflow,0,1
+Malakassa,50,4,February,Winter,Mountain,0,1
+Nea-Filadelffia,0.2,24,December,Winter,No,30,0
+Athens,41,24,March,Spring,No,30,0
+Athens,5.2,24,December,Winter,No,30,0
+Athens,8.1,24,October,Fall,No,30,0
+Eleusina,27,24,January,Winter,No,30,0
+Athens,6,2,December,Winter,No,30,0
+Menidi,179.8,24,October,Fall,No,30,1
+Ano-Liosia,130.6,24,October,Fall,No,30,1
+Nea-Filadelffia,114.8,24,October,Fall,No,30,1
+Mandra,60,24,November,Fall,River-Overflow,0,1
+Kypseli,15,8,July,Summer,No,30,0
+Nea-Ionia,10,4,April,Spring,No,30,0
+Mosxato,15,3,September,Fall,No ,30,0
+Peiraias,30,2,September,Fall,No,30,0
+Agios-Panteliomonas,70,5,November,Fall,Νο,30,0
+Athens,10,4,November,Fall,No,30,0
+Neo Faliro,75,8,November,Fall,No,1
+Mosxato,30,7,November,Fall,No,30,0
+Peristeri,10,8,August,Summer,Νο,0,0
+Peristeri,10,9,August, Summer,Νο,0,0
+Tzitzifies,66,4,January,Winter,River-Overflow,0,1
+Tauros,78,8,december,winter,River-Overflow,0,1
 Mosxato,70,5,november,Fall,River-Overflow,0,0,1
-Bari,64,5,November,Fall,River-Overflow,0,0,1
-Boula,64,5,November,Fall,River-Overflow,0,0,1
-Glyfada,64,5,November,Fall,River-Overflow,0,0,1
-Nea-Ionia,70,1.5,October,fall,River-Overflow,0,13,1
-Perissos,70,1.5,October,Fall,River-Overflow,0,0,1
-Malakassa,50,4,February,Winter,Mountain,0,0,1
-Nea-Filadelffia,0.2,24,December,Winter,No,30,0,0
-Athens,41,24,March,Spring,No,30,0,0
-Athens,5.2,24,December,Winter,No,30,0,0
-Athens,8.1,24,October,Fall,No,30,0,0
-Eleusina,27,24,January,Winter,No,30,0,0
-Athens,6,2,December,Winter,No,30,0,0
-Menidi,179.8,24,October,Fall,No,30,2,1
-Ano-Liosia,130.6,24,October,Fall,No,30,1,1
-Nea-Filadelffia,114.8,24,October,Fall,No,30,1,1
-Mandra,60,24,November,Fall,River-Overflow,0,23,1
-Kypseli,15,8,July,Summer,No,30,0,0
-Nea-Ionia,10,4,April,Spring,No,30,0,0
-Mosxato,15,3,September,Fall,No ,30,0,0
-Peiraias,30,2,September,Fall,No,30,0,0
+Bari,10,5,November,Fall,No,0,1
+Boula,64,5,November,Fall,River-Overflow,0,1
+Glyfada,64,5,November,Fall,River-Overflow,0,1
+Nea-Ionia,70,1.5,October,fall,River-Overflow,0,1
+Perissos,70,1.5,October,Fall,River-Overflow,0,1
+Malakassa,50,4,February,Winter,Mountain,0,1
+Nea-Filadelffia,0.2,24,December,Winter,No,30,0
+Athens,41,24,March,Spring,No,30,1
+Athens,5.2,24,December,Winter,No,30,1
+Athens,8.1,24,October,Fall,No,30,1
+Eleusina,27,24,January,Winter,No,30,1
+Athens,7,2,December,Winter,No,30,0
+Menidi,58,24,October,Fall,No,30,1
+Ano-Liosia,20,24,October,Fall,No,30,1
+Nea-Filadelffia,51,24,October,Fall,No,30,0
+Mandra,50,24,November,Fall,River-Overflow,0,1
+Kypseli,5,8,July,Summer,No,30,0
+Nea-Ionia,10,4,April,Spring,No,30,0
+Mosxato,15,3,March,Spring,No ,30,0
+Peiraias,10,2,March,Spring,No,30,0
