@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang='el-GR'>
+<meta charset="utf-8" />
+
+
+<head>
+    <!-- My CSS styls -->
+    <link rel="stylesheet" href="CSS/styles.css">
+
+
+	<!-- JQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- BING map -->
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AmB10sLEYKiqVN8mibtfPrXI9RX63fJUSD6KfPn2lKdc1JPkttrr5dmqoCi2VkH6' async defer></script>
+
+    <!--Moment JS -->
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+
+	<!-- Latest compiled and minified CSS BootStrap-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript BootStrap-->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!--DataTables-->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+
+</head>
+
+
+<body>
+    
+    <!--include header-->
+	<div id="nav-ph"> </div>   
+     
+     <!--Error pop up that appears after error in device-->
+     <div id="userMsg" class="alert" style="display: none;">	
+		  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+		  <strong>Προσοχή! </strong> Οι σωλήνες του φρεατίου εμφανίζονται βουλωμένοι.
+		  <p id="add_freatio"></p>
+		  <p  id="timer1"></p>
+		  <p  id="timer"></p>
+     </div>
+    
+    <div id="waterlevel" class="alert" style="display: none;">	
+		  <span class="closebtn1" onclick="this.parentElement.style.display='none';">&times;</span> 
+		  <strong>Προσοχή! </strong>Η στάθμη του νερού φαίνεται ότι έχει φτάσει στο 1/2 του φρεατίου.
+		  <p id="add_water"></p>
+		  <p  id="add_water1"></p>
+     </div>
+
+	
+	 <div id="myMap"></div> <br>
+
+     <!-- Container to display all the info that we get from DB-->
+     <div class="container">
+		 <div class="tab">
+		  	<button class="tablinks" onclick="tabStatus(event, 'Details')" id="defaultOpen">Πληροφορίες Φρεατίου</button>
+		  	<button class="tablinks" onclick="tabStatus(event, 'Errors')">Σφάλματα</button>
+		  	<button class="tablinks" onclick="tabStatus(event, 'User Messages')">Demo</button>
+		 </div>
+
+		  <!-- Tab content: Details displays details of the device -->
+		  <div id="Details" class="tabcontent">
+		  	<!--<h3 style="float:left;">Details</h3><button style="float:left;" class="button right">Update</button>-->
+		  	<div id="Details"></div>
+		  	<table class="table">
+		        <tr>
+		            <td>ID</td>
+		            <td id="Id"></td>
+		        </tr>
+		        <tr>
+		            <td>ID Συσκευής</td>
+		            <td id="DevId"></td>
+		        </tr>
+		        <tr>
+		            <td>Υγρασία</td>
+		            <td id="UltraSen"></td>
+		        </tr>
+		        <tr>
+		            <td >Αισθητήρας Στάθμης Νερού<img id="img_wat" style="height: 15px; width: 15px;float:left;" src="images/warning.png"></td>
+		            <td id="WatSen"></td>
+		        </tr>
+		         <tr>
+		            <td>Αισθητήρας Floater<img id="img_flo"  style="height: 15px; width: 15px;float:left;" src="images/warning.png"></td>
+		            <td id="Flooded"></td>
+		        </tr>
+
+		        <tr>
+		            <td>Τελευταία Ενημέρωση</td>
+		            <td id="date"></td>
+		        </tr>
+		     </table>
+		  </div>
+          
+          <!-- Tab content: Error displays all errors of the device -->
+		  <div id="Errors" class="tabcontent">
+		  	<table class="table_error table table-striped table-bordered table-sm" id="table_error" cellspacing="0" style="width:100%">
+		  	 <thead>
+		        <tr class="table_tr">
+		            <th class="table_th">Ημερομηνία</th>
+					<th class="table_th">ID Συσκευής</th>
+		            <th class="table_th">Περιγραφή</th>		            
+		        </tr>
+		       </thead>
+
+		     </table>
+
+		  </div>
+
+		 <!-- Tab content: User Messages will display results from Machine Learning algorithm -->
+		  <div id="User Messages" class="tabcontent">
+		  	<h4>Demo</h4>
+		  	<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+   
+		  	<form  action="/ptixiaki%20v1/APIs/action_page.php" method="get"  target="dummyframe" > 
+		  			<label for="Rain">Rain:</label><br>
+		  		    <input type="checkbox" id="Yes" name="Rain" value="1">
+				    <label for="Yes">Yes</label><br>
+				    <input type="checkbox" id="No" name="Rain" value="0" checked>
+				    <label for="No">No</label>
+
+					<br>
+  					<label for="floater">Floater:</label><br>
+  					<input type="number" id="floater" name="floater" value="0" min="0" max="1">
+				  	<br>
+
+				  	<label for="waterl">Water Level Sensor:</label><br>
+  					<input type="number" id="waterl" name="waterl" value="0" min="0" max="533"><br><br>
+  					<input type="submit" name="submit" value="Submit">
+			</form>
+
+			<div class="right">
+				
+			</div>
+		</div>
+
+
+	</div>
+
+	<script src="JS/scripts.js"></script>
+	<script>
+	//Add headear in page
+	$(function(){
+	  $("#nav-ph").load("include/navigation.html");
+	});
+	</script>
+
+ <script>
+ 	    //console.log("Insert Data to DB Status");
+    	var last_date = '';
+		
+        $(document).ready( function() {
+      		pingInsertStatus();
+    	});       
+        
+        // Get Freatio status from DB
+	    function pingInsertStatus() {            
+	        $.ajax({ 
+	            type: "GET",
+	            url: "https://api.thingspeak.com/channels/1279772/feeds.json?results=1",
+	            cache: false,
+	            async: true,            
+	            success: function(data){
+					res6 = data.feeds[0];
+                    sensor1 = res6.field1;
+                    sensor2 = res6.field2;
+                    sensor3 = res6.field3;
+                    sensor4 = res6.field4;
+                    date= res6.created_at;
+                    date = date.replace("T", " ");
+                    date = date.replace("Z", "");
+                    date1 = new Date (date);
+
+	            	$.ajax({
+		                type: "GET",
+		                url: "http://localhost/ptixiaki%20v1/APIs/info.php",
+		                cache: false,
+        				async: true, 
+		                success: function (data) {
+		                	res = data.info[0];
+            				last_date= res.date
+            				last_date1 = new Date(last_date);
+
+            				
+            				if (date1.getTime() == last_date1.getTime()) { //!==
+            					$.ajax({	
+					                type: "POST",
+					                url: "http://localhost/ptixiaki%20v1/APIs/write_data.php?sensor1="+sensor1+"&sensor2="+sensor2+"&sensor3="+sensor3+"&sensor4="+sensor4+"&created="+date,
+					                success: function (data) {
+					                	console.log("Data of sensors are inserted in DB");	
+					                }
+					            });
+
+            				}
+		                }
+		            });	
+			         //setTimeout("pingInsertStatus()", 30000);    		             
+	                }
+	               
+	        }); 
+	    }
+	</script>
+
+
+	<script>
+		//console.log("Display Device Status");
+		var lastNotificationIdentifier01 = '2000-01-01 00:00:00';
+
+        $(document).ready( function() {  
+      		pingDisplayStatus();
+    	});
+        
+
+        //GET freation info from DB
+	    function pingDisplayStatus() {               
+	        $.ajax({ 
+	            type: "GET",
+	            url: "http://localhost/ptixiaki%20v1/APIs/info.php",
+	            cache: false,
+	            async: true,            
+	            success: function(data){
+					res = data.info[0];
+                    localIdentifier01 = res.date;
+                    localIdentifier0 = new Date(localIdentifier01);
+                    lastNotificationIdentifier0 = new Date(lastNotificationIdentifier01);
+
+                    isFloatedSensor = res.FloaterSensor;
+                    waterLevel = res.waterSensor;
+                    isFloated = res.isFloated;
+
+                     
+                    // When a new row is added, then table is going to be updated with newest data
+                    if (localIdentifier0.getTime() !== lastNotificationIdentifier0.getTime() ) {
+                    	//Display info in Details table
+                        document.getElementById("Id").innerHTML = res.id;
+	                    document.getElementById("DevId").innerHTML= res.device_id;
+	                    document.getElementById("UltraSen").innerHTML= res.humidity;
+	                    document.getElementById("WatSen").innerHTML= res.waterSensor;
+	                    document.getElementById("Flooded").innerHTML= res.FloaterSensor;
+	                    document.getElementById("date").innerHTML= res.date;
+
+	                    //According to isFloated, display error message 
+                         if (isFloatedSensor == 1) {
+			                document.getElementById("userMsg").style.display = "block"; 
+			                document.getElementById("img_flo").style.display = "block"; 
+			                //currentTime = new Date();
+			                //console.log(currentTime);
+			             }
+			             else if (isFloatedSensor == 0)
+			             {
+			                document.getElementById("userMsg").style.display = "none"; 
+			                document.getElementById("img_flo").style.display = "none"; 
+			             }	              					  
+
+
+			             if (waterLevel >= 500)	
+			             {
+			             	 document.getElementById("waterlevel").style.display = "block"; 
+			             	 document.getElementById("img_wat").style.display = "block";
+			             } 
+			             else
+			             {
+			             	document.getElementById("waterlevel").style.display = "none"; 
+			                document.getElementById("img_wat").style.display = "none";
+			             }
+
+			             if (isFloated == 1)
+			             {
+			             	document.getElementById("timer1").innerHTML = "Timer τελείωσε.Το  Φρεάτιο είναι βουλωμένο"; //
+					        document.getElementById('userMsg').style.backgroundColor = 'red';
+			             }
+
+		                
+		                lastNotificationIdentifier0 = localIdentifier0;
+		                
+		            }
+	                setTimeout("pingDisplayStatus()", 5000);
+	            }
+	        });
+	    };	
+	</script>
+    
+
+	<script>
+		//console.log("Display error log in error tab");
+        $(document).ready( function() {  
+      		pingErrorLogs();
+    	});  
+       
+	  function pingErrorLogs() {  
+			    var table = $('#table_error').DataTable( {
+		        ajax: {
+		           url: 'http://localhost/ptixiaki%20v1/APIs/info_error.php',
+		           method: 'GET',
+		           xhrFields: {
+		               withCredentials: true
+		           },
+		           dataSrc:'info',		           
+		        },
+		        "order": [[ 0, "desc" ]],
+		        columns: [
+		            { data: 'date' },
+		            { data: 'device_id' },
+		            { data: 'description'}
+		        ]
+		        } ); 
+
+		        setInterval( function () {
+    			table.ajax.reload();
+				}, 30000 );
+
+	   }      
+	</script>
+
+
+
+	<script>
+    	//console.log("Check if currently Raining"); 
+    	var lastNotificationIdentifier1 = '';
+        var isFloatedAfter30;
+        var Rainingbool = 0 ;
+		
+        $(document).ready( function() {
+      		pingStatus30min();
+    	});       
+        
+        // Freatio is floaded
+	   function pingStatus30min() {            
+	    $.ajax({ 
+	        type: "GET",
+	        url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php",
+	        cache: false,
+	        async: true,            
+	        success: function(data){
+				res1 = data.info[0];
+	            localIdentifier1 = res1.id;
+	            isFloated30 = res1.FloaterSensor;
+	            //console.log(isFloated30);
+	            if (isFloated30 == 1)
+	            {
+	            	$.ajax({
+			                type: "GET",
+			                url: "http://localhost/ptixiaki%20v1/APIs/info.php",
+			                //url: "http://api.openweathermap.org/data/2.5/weather?lat=38.05&lon=23.8&units=metric&appid=8f6651468a6cbf13dff0eaaa5f7d6e9c",
+			                cache: false,
+	        				async: true,  
+			                success: function (data) {
+			                	res = data.info[0];//res = data.weather[0];
+			                	//Raining = res.RainingBool; //desc = res.main;
+			                	weatherStatus = res.weatherStatus;
+
+			                	if (weatherStatus == 0) 
+			                		desc = "Clear";
+			                	else 
+			                		desc = "Rain";
+
+
+			                	console.log(desc);
+			                	if (desc == "Thunderstorm" || desc == "Rain" || desc == "Drizzle")
+			                	{
+			             
+			                		document.getElementById("add_freatio").innerHTML ="";
+			                		document.getElementById("add_water").innerHTML ="";
+			                		Rainingbool = 1;
+			                		console.log ("Its raining currently");
+
+			                		/*console.log("Its raining currently");
+		                             $.ajax({	
+						                type: "POST",
+						                url: "http://localhost/ptixiaki%20v1/APIs/RainingCurrently.php?RainingNow=1&CurrentDate=0&isFloated=0",
+						                success:function (data) {
+						                	console.log("Its raining currently");
+						                } 
+					                }); */
+
+
+			                	}
+			                	else
+			                	{
+			                		document.getElementById("add_freatio").innerHTML ="Όμως δεν βρέχει. Ελέγξτε το πάλι σε λίγα λεπτά.";
+			                		document.getElementById("add_water").innerHTML ="όμως δεν βρέχει. Ελέγξτε το πάλι σε λίγα λεπτά.";
+			                	}
+
+
+	                           if (Rainingbool == 1 && ( desc == "Snow" || desc == "Clouds" || desc == "Clear" || desc == "Atmosphere"))
+	                            {
+
+	                               console.log ("Its NOT raining anymore");
+	                               const format1 = "YYYY-MM-DD HH:mm:ss"
+	                               currentTime = new Date();
+	                               console.log(currentTime);
+                    			   var currentTimeN30 = moment(currentTime).add(3, 'm').toDate(); //add 30
+                    			   console.log(currentTimeN30);
+                    			   currentTimeN30 = moment(currentTimeN30).format(format1);
+                    			   console.log(currentTimeN30);
+
+		                           $.ajax({	
+							                type: "POST",
+							                url: "http://localhost/ptixiaki%20v1/APIs/RainingCurrently.php?RainingNow=1&CurrentDate="+currentTimeN30+"isFloated=0",
+							                success: function (data) {
+							                	console.log("Rain is over. Register Date.");
+							                }
+					               });
+					               Rainingbool = 0;
+
+	                            }
+    
+			                }
+			            });
+	            }
+  
+	             setTimeout("pingStatus30min()", 10000);
+	            }
+
+	        });
+	    }
+	</script>
+
+	<script>
+		//console.log("Perform countdown and check if Freatio is floaded"); 
+    	//Get Freatio status. If its floated => update map icon to red (from green) and display error message
+    	//var lastNotificationIdentifier1 = '';
+    	var endTimer = 0;
+ 
+		
+        $(document).ready( function() {
+      		FreatioIsFloaded();
+    	});       
+        
+        // Freatio is floaded
+	   function FreatioIsFloaded() {            
+	    $.ajax({ 
+	        type: "GET",
+	        url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php",
+	        cache: false,
+	        async: true,            
+	        success: function(data){
+				res1 = data.info[0];
+	            localIdentifier1 = res1.id;
+	            floaterSensor = res1.FloaterSensor
+	            EndOfRain = res1.dateAfter30;
+	            RainFlag = res1.RainingBool;
+	            //console.log(RainFlag);
+	            countDownDate = new Date(EndOfRain).getTime();
+	            //console.log(countDownDate);
+	            isFloated = res1.isFloated
+	          if (floaterSensor == 1 && countDownDate > 0 && isFloated == 0 && RainFlag == 1)
+	          {           
+	            var x = setInterval(function() {
+					  // Get today's date and time
+					  var now = new Date().getTime();
+					    
+					  // Find the distance between now and the count down date
+					  var distance = countDownDate - now;
+					    
+					  // Time calculations for days, hours, minutes and seconds
+					  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+					  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+					    
+					  // Output the result in an element with id="demo"
+					  document.getElementById("timer").innerHTML ="Παρακαλώ ελέγξτε μετά το countdown:" + minutes + "m " + seconds + "s ";
+					    
+					  // If the count down is over, call FreatioStatus. If its still floated
+					  if (distance < 0) {
+					    clearInterval(x);
+					    document.getElementById("timer").innerHTML = "";
+					    endTimer = 1;
+					    //document.getElementById('userMsg').style.backgroundColor = 'red';
+
+					  }
+				}, 1000);
+				if (endTimer == 1) {
+					    $.ajax({						    	
+			                    type: "POST",
+				                url: "http://localhost/ptixiaki%20v1/APIs/RainingCurrently.php?RainingNow=0&CurrentDate="+EndOfRain+"&isFloated=1",
+				                success: function (data) {
+				                	console.log("Rain is over. Register Date.");
+				                	$.ajax({	
+						                type: "POST",
+						                url: "http://localhost/ptixiaki%20v1/APIs/postErrorFloater.php",
+						                success: function (data) {
+						                console.log("Data in ERROR table is posted");
+						                endTimer = 0;
+				                	    }  
+		                			});
+				                }
+		                });
+			    }
+		
+	            
+  			  }		  
+	             setTimeout("FreatioIsFloaded()", 10000);
+	            }
+
+	        });
+	    }
+	</script>
+
+	<script>
+		//console.log("Post in Error DB");
+    	var lastNotificationIdentifier31 = '2000-01-01 00:00:00';
+    	var endTimer1 = 0;
+    	var post ;
+ 
+		
+        $(document).ready( function() {
+      		PostErrorWater();
+    	});       
+        
+        // Freatio is floaded
+	   function PostErrorWater() {            
+	    $.ajax({ 
+	        type: "GET",
+	        url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php",
+	        cache: false,
+	        async: true,            
+	        success: function(data){
+				res1 = data.info[0];
+	            waterLevel = res1.waterSensor;
+	            afterTimer = res1.dateAfterWater;
+	            date  = res1.date
+		        console.log(afterTimer);
+
+		        if (waterLevel <= 500)
+		        {
+		        	post = 0;
+		        	console.log(post);
+		        }
+
+	            if (waterLevel > 500) {
+					   const format1 = "YYYY-MM-DD HH:mm:ss"
+	                   currentTime = new Date();
+	    			   var currentTimeN30 = moment(currentTime).add(1, 'm').toDate(); //add 30
+	    			   currentTimeN30 = moment(currentTimeN30).format(format1);
+	    			   console.log("For water level sensor:");
+	    			   console.log(post);
+
+	    			 if (currentTime )
+		               $.ajax({	
+				                type: "POST",
+				                url: "http://localhost/ptixiaki%20v1/APIs/addTimer.php?timer="+currentTimeN30,
+				                success: function (data) {
+				                	console.log("Water Sensor Timer added.");
+				                	post = 2;
+				                }
+		               });
+					            
+		               countDownDate1 = new Date(afterTimer).getTime();
+		               if (countDownDate1 > 0 && waterLevel > 500)
+			           {           
+			            	  var x = setInterval(function() {
+							  // Get today's date and time
+							  var now1 = new Date().getTime();
+							    
+							  // Find the distance between now and the count down date
+							  var distance1 = countDownDate1 - now1;
+							    
+							  // Time calculations for days, hours, minutes and seconds
+							  var minutes1 = Math.floor((distance1 % (1000 * 60 * 60)) / (1000 * 60));
+							  var seconds1 = Math.floor((distance1 % (1000 * 60)) / 1000);
+							    
+							  // Output the result in an element with id="demo"
+							  document.getElementById("add_water1").innerHTML ="Παρακαλώ ελέγξτε μετά το countdown:" + minutes1 + "m " + seconds1 + "s ";
+							    
+							  // If the count down is over, call FreatioStatus. If its still floated
+							  if (distance1 < 0) {
+							    clearInterval(x);
+							    document.getElementById("add_water1").innerHTML = "Timer Done. Το φρεάτιο ειναι πλημμυρισμένο μέχρι την 1/2.";
+							    //document.getElementById('waterlevel').style.backgroundColor = 'red';
+							    endTimer1 = 1;
+							    //document.getElementById('userMsg').style.backgroundColor = 'red';
+
+							  }
+						}, 1000);
+						if (endTimer1 == 1 && post == 2) {
+							    $.ajax({						    	
+					                    type: "POST",
+						                //url: "http://localhost/ptixiaki%20v1/APIs/postErrorWater.php",
+						                success: function (data) {
+						                	console.log("Posted Error for Floater");
+						                	endTimer1 = 0;
+						                	post == 0;
+						                }
+				                });
+					    }
+	            
+  			      }	
+  			    }	
+  			    console.log(post);  
+	            setTimeout("PostErrorWater()", 5000);
+	           
+	          } 
+
+	        });
+	    }
+	</script>
+
+
+
+
+
+
+</body>
+
+</html>

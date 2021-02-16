@@ -16,6 +16,15 @@
   transition: 0.3s;
 }
 
+.right {
+  position: absolute;
+  right: 0px;
+  width: 300px;
+  padding: 10px;
+  bottom: 50%;
+
+}
+
 /* Change background color of buttons on hover */
 .tab button:hover {
   background-color: #ddd;
@@ -66,10 +75,13 @@ label {
 input, label {
     margin: .4rem 0;
 }
+p { 
+  display: inline 
+}
 
 .alert {
   padding: 20px;
-  background-color: #f44336;
+  background-color: #FFA500;
   color: white;
 }
 
@@ -88,6 +100,21 @@ input, label {
   color: black;
 }
 
+.closebtn1 {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.closebtn1:hover {
+  color: black;
+}
+
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
@@ -103,3 +130,6 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+
+

@@ -24,37 +24,81 @@
 }
 
 
-function GetMap()
-    {
-      var map = new Microsoft.Maps.Map('#myMap', {
-          credentials: 'AmB10sLEYKiqVN8mibtfPrXI9RX63fJUSD6KfPn2lKdc1JPkttrr5dmqoCi2VkH6',
-          center: new Microsoft.Maps.Location(37.9924, 23.6781)
-      });
+$(document).ready( function() {  
+       //GetMap();
+});
 
-      $.ajax({
-          contentType: "application/json",
-          type: "GET",
-          url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php?task=Get%20ifFloated",
-          success: function (data) {
+
+function GetMap()
+{
+    var map = new Microsoft.Maps.Map('#myMap', {
+        credentials: 'AmB10sLEYKiqVN8mibtfPrXI9RX63fJUSD6KfPn2lKdc1JPkttrr5dmqoCi2VkH6',
+        center: new Microsoft.Maps.Location(37.9924, 23.6781)
+    });
+
+    //Create an infobox at the center of the map but don't show it.
+    infobox = new Microsoft.Maps.Infobox(map.getCenter(), {
+      visible: false
+    });
+
+     //Assign the infobox to a map instance.
+      infobox.setMap(map);
+
+     $.ajax({
+        contentType: "application/json",
+        type: "GET",
+        url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php?task=Get%20ifFloated",
+        success: function (data) {
               res = data.info[0];
-              isFloated = res.isFloated;
+              isFloated = res.FloaterSensor;
               //console.log(isFloated);
               if (isFloated == 1) {
                 createColoredPushpin(map.getCenter(), 'red', function (pin) {
                    map.entities.push(pin);
+                  //Store some metadata with the pushpin.
+                  pin.metadata = {
+                    title: 'Θηβών κι Ιερά Οδός 50',
+                    description: 'Status: Error '
+                 };
+
+                //Add a click event handler to the pushpin.
+                Microsoft.Maps.Events.addHandler(pin, 'click', pushpinClicked);
+
                 }); 
               } else if (isFloated == 0)
               {
                 createColoredPushpin(map.getCenter(), 'green', function (pin) {
                    map.entities.push(pin);
-                }); 
+                  //Store some metadata with the pushpin.
+                  pin.metadata = {
+                    title: 'Θηβών κι Ιερά Οδός 50',
+                    description: 'Status: OK'
+                 };
+
+                //Add a click event handler to the pushpin.
+                Microsoft.Maps.Events.addHandler(pin, 'click', pushpinClicked); 
+                });
               }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-              //$("#postResult").val(jqXHR.statusText);
+
+            //setTimeout("GetMap()", 10000)
           }
       });
+     
     }
+
+    function pushpinClicked(e) {
+        //Make sure the infobox has metadata to display.
+        if (e.target.metadata) {
+            //Set the infobox options with the metadata of the pushpin.
+            infobox.setOptions({
+                location: e.target.getLocation(),
+                title: e.target.metadata.title,
+                description: e.target.metadata.description,
+                visible: true
+            });
+        }
+    }
+
 
    function createColoredPushpin(location, color, callback) {
        var img = new Image();
@@ -74,11 +118,15 @@ function GetMap()
            //Draw the pushpin icon
            context.drawImage(img, 0, 0);
 
+
+
            var pin = new Microsoft.Maps.Pushpin(location, {
                //Generate a base64 image URL from the canvas.
                icon: c.toDataURL(),
                anchor: new Microsoft.Maps.Point(12, 39)
            });
+
+
 
            if (callback) {
                callback(pin);
@@ -87,49 +135,3 @@ function GetMap()
 
        img.src = 'images/pushPin.png';
    }
-
-
-function ErrorAlert()
-    {
-          $.ajax({
-          contentType: "application/json",
-          type: "GET",
-          url: "http://localhost/ptixiaki%20v1/APIs/freatioStatus.php?task=Get%20ifFloated",
-          success: function (data) {
-              res = data.info[0];
-              isFloated = res.isFloated;
-              //console.log(isFloated);
-              if (isFloated == 1) {
-                document.getElementById("userMsg").style.visibility= "visible"; 
-              } else if (isFloated == 0)
-              {
-                document.getElementById("userMsg").style.visibility= "hidden"; 
-              }
-          },
-          error: function (jqXHR, textStatus, errorThrown) {
-              //$("#postResult").val(jqXHR.statusText);
-          }
-      });
-    }
-
-
-/*$.ajax({
-                contentType: "application/json",
-                type: "GET",
-                url: "http://localhost/ptixiaki%20v1/APIs/info.php?task=Get%20Code",
-                success: function (data) {
-                  //data1 = (JSON.stringify(data.info[0]);
-                  //console.log(data1);
-                    //alert('Welcome!');
-                    res = data.info[0];
-                    document.getElementById("Id").innerHTML = res.id;
-                    document.getElementById("DevId").innerHTML= res.device_id;
-                    document.getElementById("UltraSen").innerHTML= res.ultrasonicSensor;
-                    document.getElementById("WatSen").innerHTML= res.waterSensor;
-                    document.getElementById("date").innerHTML= res.date;
-                   // window.location.href = "/Home/Details/" + data.id;
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    $("#postResult").val(jqXHR.statusText);
-                }
-            }); */

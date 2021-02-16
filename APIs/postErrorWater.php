@@ -9,8 +9,8 @@
         
         $id;
         $device_id;
-        $device_code = 50;
-		$description = 'Floater is blocked';
+        $device_code = 60;
+		$description = 'Water Level is at maximum';
 
 
 		//Get values from another table
@@ -27,7 +27,7 @@
 		}
 
 		// Insert data into database
-		$sql = "INSERT INTO `device_error`(`status_id`, `device_id`, `device_code`, `description`, `date`) VALUES ('.$id.','$device_id',50,'Floater is blocked',now())";
+		$sql = "INSERT INTO `device_error`(`status_id`, `device_id`, `device_code`, `description`, `date`) VALUES ('.$id.','$device_id',60,'Water Level is at maximum',now())";
 
 
 		$post_data_query = mysqli_query($conn, $sql);
